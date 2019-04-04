@@ -1,0 +1,211 @@
+* look and feel
+** quelpa
+
+#+BEGIN_SRC emacs-lisp
+  (use-package quelpa
+    :ensure t)
+
+(if (require 'quelpa nil t)
+    (quelpa-self-upgrade)
+  (with-temp-buffer
+    (url-insert-file-contents "https://framagit.org/steckerhalter/quelpa/raw/master/bootstrap.el")
+    (eval-buffer)))
+
+
+  (quelpa
+   '(quelpa-use-package
+     :fetcher git
+     :url "https://framagit.org/steckerhalter/quelpa-use-package.git"))
+  (require 'quelpa-use-package)
+
+
+
+
+#+END_SRC
+
+
+** startup
+#+BEGIN_SRC emacs-lisp
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+    ;; If you edit it by hand, you could mess it up, so be careful.
+    ;; Your init file should contain only one such instance.
+    ;; If there is more than one, they won't work right.
+  ;;'(inhibit-startup-buffer-menu t)
+  '(inhibit-startup-screen t))
+  (add-to-list 'default-frame-alist '(fullscreen . maximized))
+#+END_SRC
+** look
+
+#+BEGIN_SRC emacs-lisp
+
+  (load-theme 'monokai t)
+  (set-default-font "Iosevka 16")
+  (tool-bar-mode -1)
+  (toggle-scroll-bar -1)
+
+  (setq sml/no-confirm-load-theme t)
+  (sml/setup)
+  (setq sml/theme 'powerline)
+
+
+#+END_SRC
+
+
+#+BEGIN_SRC emacs-lisp
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:inherit nil :stipple nil :background "#272822" :foreground "#F8F8F2" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 160 :width normal :foundry "nil" :family "iosevka"))))
+ '(sml/filename ((t (:inherit sml/global :background "Black" :foreground "Yellow"))))
+ '(sml/folder ((t (:inherit sml/global :background "#35331D" :foreground "White" :weight normal))))
+ '(sml/modes ((t (:inherit sml/global :background "#272822" :foreground "Green")))))
+#+END_SRC
+
+
+** Navigation
+*** which-key
+#+BEGIN_SRC emacs-lisp
+ (use-package which-key
+	:ensure t 
+	:config
+	(which-key-mode))
+#+END_SRC
+
+*** neo-tree
+#+BEGIN_SRC emacs-lisp
+  (use-package neotree
+	       :ensure t
+	       :config
+	       (global-set-key [f8] 'neotree-toggle))
+
+#+END_SRC
+
+*** Dired+
+
+#+BEGIN_SRC emacs-lisp
+
+(use-package dired+
+  :quelpa (dired+ :fetcher url :url "https://www.emacswiki.org/emacs/download/dired+.el")
+  :defer 1
+  :init
+  (setq diredp-hide-details-initially-flag nil)
+  (setq diredp-hide-details-propagate-flag nil)
+
+  :config
+  (diredp-toggle-find-file-reuse-dir 1))
+
+
+#+END_SRC
+
+
+* Usefull stuff
+
+#+BEGIN_SRC emacs-lisp
+  (recentf-mode 1)
+  (setq recentf-max-menu-items 25)
+  (global-set-key "\C-x\ \C-r" 'recentf-open-files)
+#+END_SRC
+
+** Ivy and swiper
+
+#+BEGIN_SRC emacs-lisp
+  (use-package ivy
+    :ensure t
+    :config
+    (ivy-mode 1))
+
+  (use-package swiper
+     :ensure t
+     :config
+     (global-set-key "\C-s" 'swiper))
+#+END_SRC
+
+* Programming languages
+** Python
+ #+BEGIN_SRC emacs-lisp 
+   (use-package elpy
+     :ensure t
+     :config
+     (elpy-enable))
+
+   (setq python-shell-interpreter "ipython")
+
+   (add-hook 'python-mode-hook
+	 (lambda ()
+	   (abbrev-mode 1)
+	   (auto-fill-mode 1)
+	   (linum-mode 1)
+	   (if (eq window-system 'x)
+	   (font-lock-mode 1))))
+ #+END_SRC
+
+** LISP
+#+BEGIN_SRC emacs-lisp
+(setq inferior-lisp-program "/usr/local/bin/sbcl")
+(require 'slime-autoloads)
+(slime-setup '(slime-fancy))
+#+END_SRC
+
+* Version control
+** Git
+#+BEGIN_SRC 
+
+(global-set-key (kbd "C-x g") 'magit-status)
+
+#+END_SRC
+
+* Org
+** Org bullets
+#+BEGIN_SRC emacs-lisp
+  (use-package org-bullets
+    :ensure t
+    :config
+    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+#+END_SRC
+
+** Languages
+#+BEGIN_SRC emacs-lisp
+(org-babel-do-load-languages
+ 'org-babel-load-languages '((python . t)))
+#+END_SRC
+
+** Org agenda
+
+#+BEGIN_SRC emacs-lisp
+(define-key global-map "\C-ca" 'org-agenda)
+
+(setq org-agenda-files '("~/Documents/Orgs/Agenda"))
+(setq org-columns-default-format "%50ITEM(Task) %10CLOCKSUM %16TIMESTAMP_IA")
+
+(setq org-todo-keywords
+      '((sequence "TODO(t)" "WAIT(w@/!)" "NEXT(n@/!)" "|" "DONE(d@!)" "CANCELED(c@)")))
+
+#+END_SRC
+
+
+#+BEGIN_SRC emacs-lisp
+  (define-key global-map "\C-cc" 'org-capture)
+  (setq org-default-notes-file "~/Documents/Orgs/Agenda/todos.org")
+#+END_SRC
+** Org capture
+#+BEGIN_SRC emacs-lisp
+
+  (setq org-capture-templates
+	'(("t" "Todo" entry (file+headline "~/Documents/Orgs/Agenda/todos.org" "Tasks")
+	   "* TODO %?\n  %i\n  \Entered on %U\n  %a")
+	  ("j" "Journal" entry (file+datetree "~/Documents/Orgs/Agenda/journal.org")
+	   "* %?\nEntered on %U\n  %i\n  %a")))
+
+#+END_SRC
+
+
+
+
+
+
+
+
+
