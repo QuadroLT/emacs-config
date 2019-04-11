@@ -10,16 +10,11 @@
     (url-insert-file-contents "https://framagit.org/steckerhalter/quelpa/raw/master/bootstrap.el")
     (eval-buffer)))
 
-
   (quelpa
    '(quelpa-use-package
      :fetcher git
      :url "https://framagit.org/steckerhalter/quelpa-use-package.git"))
   (require 'quelpa-use-package)
-
-
-
-
 #+END_SRC
 ** startup
 #+BEGIN_SRC emacs-lisp
@@ -102,7 +97,6 @@
 #+END_SRC
 
 * Usefull stuff
-
 #+BEGIN_SRC emacs-lisp
   (recentf-mode 1)
   (setq recentf-max-menu-items 25)
@@ -157,10 +151,8 @@
 
 * Version control
 ** Git
-#+BEGIN_SRC 
-
-(global-set-key (kbd "C-x g") 'magit-status)
-
+#+BEGIN_SRC emacs-lisp
+(define-key global-map "\C-xg" 'magit-status)
 #+END_SRC
 
 * Org
@@ -179,18 +171,14 @@
 #+END_SRC
 
 ** Org agenda
-
 #+BEGIN_SRC emacs-lisp
 (define-key global-map "\C-ca" 'org-agenda)
-
 (setq org-agenda-files '("~/Documents/Orgs/Agenda"))
 (setq org-columns-default-format "%50ITEM(Task) %10CLOCKSUM %16TIMESTAMP_IA")
-
 (setq org-todo-keywords
       '((sequence "TODO(t)" "WAIT(w@/!)" "NEXT(n@/!)" "|" "DONE(d@!)" "CANCELED(c@)")))
 
 #+END_SRC
-
 
 #+BEGIN_SRC emacs-lisp
   (define-key global-map "\C-cc" 'org-capture)
@@ -198,22 +186,12 @@
 #+END_SRC
 ** Org capture
 #+BEGIN_SRC emacs-lisp
-
   (setq org-capture-templates
 	'(("t" "Todo" entry (file+headline "~/Documents/Orgs/Agenda/todos.org" "Tasks")
 	   "* TODO %?\n  %i\n  \Entered on %U\n  %a")
 	  ("j" "Journal" entry (file+datetree "~/Documents/Orgs/Agenda/journal.org")
 	   "* %?\nEntered on %U\n  %i\n  %a")))
-
 #+END_SRC
-
-
-
-
-
-
-
-
 
 ** Org export
 #+BEGIN_SRC emacs-lisp
