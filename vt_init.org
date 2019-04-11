@@ -1,6 +1,5 @@
 * Look and feel
 ** quelpa
-
 #+BEGIN_SRC emacs-lisp
   (use-package quelpa
     :ensure t)
@@ -22,8 +21,6 @@
 
 
 #+END_SRC
-
-
 ** startup
 #+BEGIN_SRC emacs-lisp
   (custom-set-variables
@@ -35,10 +32,19 @@
   '(inhibit-startup-screen t))
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
 #+END_SRC
-** look
 
 #+BEGIN_SRC emacs-lisp
+(global-visual-line-mode)
+#+END_SRC
 
+#+BEGIN_SRC emacs-lisp
+(use-package dashboard
+  :ensure t
+  :config
+  (dashboard-setup-startup-hook))
+#+END_SRC
+** look
+#+BEGIN_SRC emacs-lisp
   (load-theme 'monokai t)
   (set-default-font "Iosevka 16")
   (tool-bar-mode -1)
@@ -47,10 +53,7 @@
   (setq sml/no-confirm-load-theme t)
   (sml/setup)
   (setq sml/theme 'powerline)
-
-
 #+END_SRC
-
 
 #+BEGIN_SRC emacs-lisp
 (custom-set-faces
@@ -63,8 +66,6 @@
  '(sml/folder ((t (:inherit sml/global :background "#35331D" :foreground "White" :weight normal))))
  '(sml/modes ((t (:inherit sml/global :background "#272822" :foreground "Green")))))
 #+END_SRC
-
-
 ** Navigation
 *** which-key
 #+BEGIN_SRC emacs-lisp
@@ -108,6 +109,12 @@
   (global-set-key "\C-x\ \C-r" 'recentf-open-files)
 #+END_SRC
 
+#+BEGIN_SRC emacs-lisp
+  (use-package exec-path-from-shell
+    :ensure t
+    :init
+    (exec-path-from-shell-initialize))
+#+END_SRC
 ** Ivy and swiper
 
 #+BEGIN_SRC emacs-lisp
